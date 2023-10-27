@@ -25,7 +25,7 @@ saving_path = r"E:\Downloads\美股报告"
 if not os.path.exists(saving_path):
     os.makedirs(saving_path)
 
-csv_path = r"D:\ZZZMydocument\Codes\年报爬取\美股\nasdaq_screener.csv"
+csv_path = r"scrape-annual-reports\美股\nasdaq_screener.csv"
 
 symbol_list = list(pd.read_csv(csv_path)['Symbol'])
 symbol_list = [str(s) for s in symbol_list]

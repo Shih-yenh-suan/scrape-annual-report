@@ -13,6 +13,8 @@ import threading
 下载符合条件的文件，
 并将其放入重新下载的文件夹
 '''
+
+
 LOCK = threading.Lock()
 LOCK_FILE_PATH = '年报爬取有关代码\downloaded_files.txt'
 if not os.path.exists(LOCK_FILE_PATH):

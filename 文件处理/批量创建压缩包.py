@@ -1,5 +1,11 @@
 import os
 import zipfile
+'''
+输入：包含多个子文件夹的文件夹路径，压缩包的输出路径
+
+将每个子文件夹分别进行压缩，同时打印出当前处理的文件
+
+'''
 
 
 def create_zip_for_each_subfolder(input_folder, output_folder):

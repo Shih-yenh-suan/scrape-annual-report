@@ -9,6 +9,8 @@ import shutil
 输入pdf文件夹A和txt文件夹B，
 从而将未能成功匹配的pdf文件筛选出来
 '''
+
+
 # 输入文件夹A和文件夹B的路径
 folder_a_path = r"E:\Source_for_sale\A股年报 PDF+TXT\A股年报PDF [56081份159GB]"
 folder_b_path = r"E:\Source_for_sale\A股年报 PDF+TXT\A股年报TXT [56081份18.8GB]"
