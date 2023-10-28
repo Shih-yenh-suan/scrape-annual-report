@@ -29,8 +29,8 @@ def create_zip_for_each_subfolder(input_folder, output_folder):
 
 
 if __name__ == "__main__":
-    input_folder = "E:\Downloads\A股社会责任报告 PDF+TXT\A股社会责任报告PDF [12364份78.7GB]\社会责任报告PDF（去重）"
-    output_folder = "E:\Downloads\A股社会责任报告 PDF+TXT\A股社会责任报告PDF [12364份78.7GB]"
+    input_folder = ""
+    output_folder = input_folder
 
     if os.path.exists(input_folder) and os.path.isdir(input_folder) and os.path.exists(output_folder) and os.path.isdir(output_folder):
         create_zip_for_each_subfolder(input_folder, output_folder)
