@@ -73,16 +73,22 @@ def download_pdf(pdfLink, year):
     filename = re.sub(r'[\/:*?"<>|]', '', filename)  # 去除非法字符
     filepath = os.path.join(saving_path, filename)  # 文件路径
 
-    if not os.path.exists(filepath):
-        r = retry_on_failure(lambda:
-                             requests.get(pdfLink, headers=HEADERS))
-        with open(filepath, 'wb') as f:
-            f.write(r.content)
-        with print_lock:  # 使用线程锁
-            print(f"{symbol} 第 {year} 年的数据已下载")
-    else:
+    # Check if a file with the same symbol and year already exists, and if so, skip the download
+    symbol_year_identifier = f"{symbol}_{year}"
+    existing_files = [f for f in os.listdir(
+        saving_path) if symbol_year_identifier in f]
+
+    if existing_files:
         with print_lock:  # 使用线程锁
             print(f'{symbol} 第 {year} 年的数据已存在，跳过下载')
+        return
+
+    r = retry_on_failure(lambda:
+                         requests.get(pdfLink, headers=HEADERS))
+    with open(filepath, 'wb') as f:
+        f.write(r.content)
+    with print_lock:  # 使用线程锁
+        print(f"{symbol} 第 {year} 年的数据已下载")
 
 
 def retry_on_failure(func):
