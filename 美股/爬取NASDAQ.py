@@ -18,7 +18,7 @@ HEADERS = {
     'Sec-Fetch-Dest': 'empty',
     'Sec-Fetch-Mode': 'cors',
     'Sec-Fetch-Site': 'same-site',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36 Edg/118.0.2088.61',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
 }
 
 saving_path = r"E:\Downloads\美股报告"
@@ -111,7 +111,10 @@ def retry_on_failure(func):
 # 主函数
 if __name__ == '__main__':
 
-    for s in symbol_list[:]:
+    i = 0  # 可自定义开始行数
+    for s in symbol_list[i:]:
+        print(f"当前爬取：{i}")
+        i += 1
         with print_lock:  # 使用线程锁
             print(f'{s} 的报告开始下载')
 
