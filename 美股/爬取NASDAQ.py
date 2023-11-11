@@ -36,6 +36,10 @@ print_lock = threading.Lock()
 
 def download_url(symbol, year):
 
+    if "^" in symbol:
+        print("字符串中含有^，跳过操作")
+        return -1
+
     url = f'https://api.nasdaq.com/api/company/{symbol}/sec-filings?limit=14&sortColumn=filed&sortOrder=desc&FormGroup=Annual%20Reports&Year={year}&IsQuoteMedia=true'
 
     while True:
@@ -111,7 +115,7 @@ def retry_on_failure(func):
 # 主函数
 if __name__ == '__main__':
 
-    i = 0  # 可自定义开始行数
+    i = 1150  # 可自定义开始行数
     for s in symbol_list[i:]:
         print(f"当前爬取：{i}")
         i += 1
