@@ -9,7 +9,7 @@ import threading
 
 # 线程锁
 LOCK = threading.Lock()
-LOCK_FILE_PATH = 'E:\Downloads\上市公司报告位置\downloaded_files.txt'
+LOCK_FILE_PATH = 'E:\Downloads\A股半年报\downloaded_files.txt'
 if not os.path.exists(LOCK_FILE_PATH):
     with open(LOCK_FILE_PATH, 'w') as file:
         pass  # Just create the file if it does not exist
@@ -28,17 +28,17 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36',
     'X-Requested-With': 'XMLHttpRequest'}
 STOP_WORDS = ['摘要', '英文', '回复', '细则', '基金', '已取消', '延迟', '提示', '意见'
-              '半年', '半<em>年', '季度', 'eport', '财务指标', '说明', '管理办法',
+              '季度', 'eport', '财务指标', '说明', '管理办法',
               '制度', '变更', '表格', '设立', '规则', '签字页', '决议公告', '纲要',
               '鉴证', '内部控制', '审计', '审核', '债券', '自查', '声明', '整改', '回函',
               '更正前', '更正公告', '差错更正', '更新前', '修正公告', '修订公告',
               '更正披露', '更正事项', '专项活动', '方案', '研究报告', '检查', '核查',
               '补充资料', '补充披露', '补充公告', '补充说明', '补充报告', '的公告'
-              ]
-SEARCH_KEY_LIST = ['環境、社會']
-SEARCH_KEYS = ';'.join(SEARCH_KEY_LIST)
-暂时没用上 = ['\;', '致.*?股东', '；', '\(2', '\(II', '刊发',
-         '通知', '回覆', '澄清', '函件', '公告',]
+              ]  # '半年', '半<em>年',
+# SEARCH_KEY_LIST = "['環境、社會']"
+# SEARCH_KEYS = ';'.join(SEARCH_KEY_LIST)
+# 暂时没用上 = ['\;', '致.*?股东', '；', '\(2', '\(II', '刊发',
+#          '通知', '回覆', '澄清', '函件', '公告',]
 DATA = {
     'pageNum': '',
     'pageSize': 30,
@@ -46,9 +46,9 @@ DATA = {
     'tabName': 'fulltext',
     'PLATE': '',
     'stock': '',
-    'searchkey': SEARCH_KEYS,
+    'searchkey': '',
     'secid': '',
-    'category': '',
+    'category': 'category_bndbg_szsh',
     'TRADE': '',
     'seDate': '',
     'sortName': '',
@@ -70,6 +70,9 @@ def process_page_for_downloads(pageNum):
 
     if result is None:
         print(f"第 {pageNum} 页已无内容，退出")
+        return False
+    if pageNum > maxpage:
+        print(f"第 {pageNum - 1} 页是最后一页，退出")
         return False
 
     print(f'正在处理第 {pageNum} 页，共 {maxpage} 页')
@@ -117,10 +120,10 @@ def process_announcements(i):
 
     down_url = 'http://static.cninfo.com.cn/' + i['adjunctUrl']
 
-    # 对于标题中不包含关键词的报告，停止下载
-    if not any(re.search(k, title) for k in SEARCH_KEY_LIST):
-        print(f'{secCode}_{seYear}_{secName}：\t不含关键词 ({title})')
-        return
+    # # 对于标题中不包含关键词的报告，停止下载
+    # if not any(re.search(k, title) for k in SEARCH_KEY_LIST):
+    #     print(f'{secCode}_{seYear}_{secName}：\t不含关键词 ({title})')
+    #     return
 
     # 对于标题包含停用词的公告，跳过下载
     if any(re.search(k, title) for k in STOP_WORDS):
@@ -134,7 +137,7 @@ def process_announcements(i):
 
 def prepare_and_download_file(secCode, title, announcementTime, down_url, secName):
     """下载公告，重命名"""
-    seYear = str(int(announcementTime[0:4])-1)
+    seYear = str(int(announcementTime[0:4]))
     filename = f'{secCode}_{seYear}_{secName}_{title}_{announcementTime}.pdf'
 
     if not os.path.exists(SAVING_PATH):
@@ -196,14 +199,14 @@ TRADE = ['农、林、牧、渔业', '电力、热力、燃气及水生产和供
          '房地产业', '水利、环境和公共设施管理业', '卫生和社会工作', '制造业', '批发和零售业',
          '信息传输、软件和信息技术服务业', '租赁和商务服务业', '居民服务、修理和其他服务业', '文化、体育和娱乐业']
 PLATE = ['sz', 'szmb', 'szcy', 'sh', 'shmb', 'shkcp', 'bj']
-DATE_START = ["01-01", "04-01", "04-21", "04-26", "04-28", "05-01"]
-DATE_END = ["03-31", "04-20", "04-25", "04-27", "04-30", "05-01"]
-SAVING_PATH = f'E:\Downloads\上市公司报告位置\CSR报告'
+DATE_START = ["01-01", "04-01", "07-01", "10-01"]
+DATE_END = ["03-31", "06-30", "09-30", "12-31"]
+SAVING_PATH = f'E:\Downloads\A股半年报'
 
 if __name__ == '__main__':
 
-    for disclosure_year in range(2022, 1999, -1):
-        YearStart = str(disclosure_year + 1)
+    for disclosure_year in range(2023, 1999, -1):
+        YearStart = str(disclosure_year)
 
         # # 按板块循环
         # for j in range(0,len(PLATE)):
@@ -214,7 +217,7 @@ if __name__ == '__main__':
         #         DATA['TRADE'] = TRADE[k]
 
         for i in range(0, len(DATE_START)):
-            seDate = f"{YearStart}-{DATE_START[i]}~{int(YearStart)+1}-{DATE_END[i]}"
+            seDate = f"{YearStart}-{DATE_START[i]}~{YearStart}-{DATE_END[i]}"
             # seDate = f"{YearStart}-01-01~{YearStart}-12-31"
             print(f"当前爬取区间：{seDate}")
             pageNum = 1

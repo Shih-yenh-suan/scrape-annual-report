@@ -57,8 +57,8 @@ def process_pdfs(pdf_folder, output_folder, max_workers=20):
 
 
 if __name__ == "__main__":
-    pdf_folder_path = r"E:\Source_for_sale\A股年报 PDF+TXT\A股年报PDF，无法识别，采用OCR - 副本"
-    output_folder_path = r"E:\Source_for_sale\A股年报 PDF+TXT\A股年报OCR"
+    pdf_folder_path = r"E:\Downloads\下载2"
+    output_folder_path = r"E:\Downloads\下载2"
 
     process_pdfs(pdf_folder_path, output_folder_path)
     print("PDF文件已成功转换为文本文件并保存到目标文件夹。")

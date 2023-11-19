@@ -16,7 +16,7 @@ import threading
 
 
 LOCK = threading.Lock()
-LOCK_FILE_PATH = '年报爬取有关代码\downloaded_files.txt'
+LOCK_FILE_PATH = 'downloaded_files.txt'
 if not os.path.exists(LOCK_FILE_PATH):
     with open(LOCK_FILE_PATH, 'w') as file:
         pass  # Just create the file if it does not exist
@@ -34,13 +34,14 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36',
     'X-Requested-With': 'XMLHttpRequest'
 }
-STOP_WORDS = ['摘要', '英文', '回复', '细则', '基金', '已取消', '延迟', '关于',
-              '半年', '半<em>年', '季度', 'Annual', '财务指标', '说明', '审核',
-              '制度', '变更', '表格', '设立', '规则', '签字页', '决议公告',
+STOP_WORDS = ['摘要', '英文', '回复', '细则', '基金', '已取消', '延迟', '提示', '意见'
+              '季度', 'eport', '财务指标', '说明', '管理办法',
+              '制度', '变更', '表格', '设立', '规则', '签字页', '决议公告', '纲要',
+              '鉴证', '内部控制', '审计', '审核', '债券', '自查', '声明', '整改', '回函',
               '更正前', '更正公告', '差错更正', '更新前', '修正公告', '修订公告',
-              '更正披露', '更正事项',
-              '补充资料', '补充披露', '补充公告', '补充说明', '补充报告', '的公告',
-              ]
+              '更正披露', '更正事项', '专项活动', '方案', '研究报告', '检查', '核查',
+              '补充资料', '补充披露', '补充公告', '补充说明', '补充报告', '的公告'
+              ]  # '半年', '半<em>年',
 暂时没用上 = ['\;', '致.*?股东', '；', '\(2', '\(II', '刊发',
          '通知', '回覆', '澄清', '函件', '公告',]
 
