@@ -37,8 +37,8 @@ def move_duplicate_files(source_folder, destination_folder):
 
 
 if __name__ == "__main__":
-    input_folder = 'E:\Downloads\上市公司报告位置\社会责任报告（去重）'
-    output_folder = 'E:\Downloads\上市公司报告位置\测试'
+    input_folder = 'E:\Source_for_sale\A股一季报[53264]'
+    output_folder = 'E:\Source_for_sale\A股一季报[53264]重复'
     count_numbers = 11
 
     move_duplicate_files(input_folder, output_folder)

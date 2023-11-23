@@ -27,12 +27,8 @@ STOP_WORDS = ['摘要', '英文', '回复', '细则', '基金', '已取消', '�
               '更正前', '更正公告', '差错更正', '更新前', '修正公告', '修订公告',
               '更正披露', '更正事项', '专项活动', '方案', '研究报告', '检查', '核查',
               '补充资料', '补充披露', '补充公告', '补充说明', '补充报告', '的公告',
-              '社会公众', '有限责任', '担保', '责任主体'
-              ]  #
-# SEARCH_KEY_LIST = "['環境、社會']"
-# SEARCH_KEYS = ';'.join(SEARCH_KEY_LIST)
-# 暂时没用上 = ['\;', '致.*?股东', '；', '\(2', '\(II', '刊发',
-#          '通知', '回覆', '澄清', '函件', '公告',]
+                            '社会公众', '有限责任', '担保', '责任主体'
+              ]  # '半年', '半<em>年',
 TRADE = ['农、林、牧、渔业', '电力、热力、燃气及水生产和供应业', '交通运输、仓储和邮政业',
          '金融业', '科学研究和技术服务业', '教育', '综合', '采矿业', '建筑业', '住宿和餐饮业',
          '房地产业', '水利、环境和公共设施管理业', '卫生和社会工作', '制造业', '批发和零售业',
@@ -43,7 +39,8 @@ CATEGORY = {
     "A股半年报": "category_bndbg_szsh",
     "A股一季报": "category_yjdbg_szsh",
     "A股三季报": "category_sjdbg_szsh",
-    "A股业绩报告": "category_yjygjxz_szsh"
+    "A股业绩报告": "category_yjygjxz_szsh",
+    "A股社会责任报告": ""
 }
 
 DATA = {
@@ -51,12 +48,12 @@ DATA = {
     'pageSize': 30,
     'column': 'szse',
     'tabName': 'fulltext',
-    'PLATE': '',
+    'plate': '',
     'stock': '',
     'searchkey': '',
     'secid': '',
     'category': '',
-    'TRADE': '',
+    'trade': '',
     'seDate': '',
     'sortName': '',
     'sortType': '',
@@ -132,11 +129,6 @@ def process_announcements(i):
 
     down_url = 'http://static.cninfo.com.cn/' + i['adjunctUrl']
 
-    # # 对于标题中不包含关键词的报告，停止下载
-    # if not any(re.search(k, title) for k in SEARCH_KEY_LIST):
-    #     print(f'{secCode}_{seYear}_{secName}：\t不含关键词 ({title})')
-    #     return
-
     # 对于标题包含停用词的公告，跳过下载
     if any(re.search(k, title) for k in STOP_WORDS):
         print(f'{secCode}_{seYear}_{secName}：\t包括停用词 ({title})')
@@ -160,12 +152,15 @@ def prepare_and_download_file(secCode, title, announcementTime, down_url, secNam
     if os.path.exists(filepath):
         print(f'{secCode}-{seYear}-{secName}：\t已存在，跳过下载')
         return
-    with open(LOCK_FILE_PATH, 'r', encoding='utf-8', errors='ignore') as lock_file:
+    # 检查报告是否已经记录
+    with open(RECORDS, 'r', encoding='utf-8', errors='ignore') as lock_file:
         downloaded_files = lock_file.readlines()
         # 如果文件中出现线程准备下载的文件，则跳过
-        if f'{filename}\n' in downloaded_files:
-            print(f'{secCode}-{seYear}-{secName}：\t已在其他线程完成下载')
+        if f'{secCode}_{seYear}\n' in downloaded_files:
+            print(f'{secCode}-{seYear}-{secName}：\t已存在记录')
             return
+        with open(RECORDS, 'a', encoding='utf-8', errors='ignore') as lock_file:
+            lock_file.write(f'{secCode}_{seYear}\n')
 
     # 使用线程锁防止冲突
     with LOCK:
@@ -214,8 +209,7 @@ def retry_on_failure(func):
 def CircleScrape():
     pageNum = 1
     while True:
-        should_continue = process_page_for_downloads(
-            pageNum)
+        should_continue = process_page_for_downloads(pageNum)
         if not should_continue:
             break
         if pageNum >= 500:
@@ -224,45 +218,59 @@ def CircleScrape():
 
 
 # 半年报
-DATE_START = ["01-01", "08-01", "08-11", "08-13", "08-15", "08-17",
-              "08-19", "08-21", "08-23", "08-25", "08-27", "08-29", "08-31", "09-02"]
-DATE_END = ["08-01", "08-10", "08-12", "08-14", "08-16", "08-18",
-            "08-20", "08-22", "08-24", "08-26", "08-28", "08-30", "09-01", "12-31"]
+# DATE_START = ["01-01", "08-01", "08-11", "08-13", "08-15", "08-17",
+#               "08-19", "08-21", "08-23", "08-25", "08-27", "08-29", "08-31", "09-02"]
+# DATE_END = ["08-01", "08-10", "08-12", "08-14", "08-16", "08-18",
+#             "08-20", "08-22", "08-24", "08-26", "08-28", "08-30", "09-01", "12-31"]
+# 年报
+DATE_START = ["01-01", "03-21", "04-02", "04-11", "04-21", "04-22", "04-23", "04-24",
+              "04-25", "04-26", "04-27", "04-28", "04-29", "04-30", "05-01", "05-02"]
+DATE_END = ["03-20", "04-01", "04-10", "04-20", "04-21", "04-22", "04-23", "04-24",
+            "04-25", "04-26", "04-27", "04-28", "04-29", "04-30", "05-01", "12-31"]
+# 一季报
+# DATE_START = ["01-01", "04-01", "04-11", "04-21", "04-22", "04-23", "04-24",
+#               "04-25", "04-26", "04-27", "04-28", "04-29", "04-30", "05-01", "05-02"]
+# DATE_END = ["04-01", "04-10", "04-20", "04-21", "04-22", "04-23", "04-24",
+#             "04-25", "04-26", "04-27", "04-28", "04-29", "04-30", "05-01", "12-31"]
+# 三季报
+# DATE_START = ["01-01", "10-01", "10-10", "10-13", "10-15", "10-17",
+#               "10-19", "10-21", "10-23", "10-25", "10-27", "10-29", "10-31", "11-02"]
+# DATE_END = ["10-01", "10-10", "10-12", "10-14", "10-16", "10-18",
+#             "10-20", "10-22", "10-24", "10-26", "10-28", "10-30", "11-01", "12-31"]
 
-cate_now = "A股年报"
+cate_now = "A股社会责任报告"
 SAVING_PATH = f'E:\Downloads\{cate_now}'
 DATA["category"] = CATEGORY[cate_now]
-
+RECORDS = f'E:\Downloads\{cate_now}\downloaded_id.txt'
+LOCK_FILE_PATH = f'E:\Downloads\{cate_now}\downloaded_files.txt'
+DATA['searchkey'] = "社会责任;ESG;环境责任"
 # 线程锁
 LOCK = threading.Lock()
-LOCK_FILE_PATH = f'E:\Downloads\{cate_now}\downloaded_files.txt'
 if not os.path.exists(LOCK_FILE_PATH):
     with open(LOCK_FILE_PATH, 'w') as file:
         pass  # Just create the file if it does not exist
 
 if __name__ == '__main__':
 
+    # 按年份循环
     for disclosure_year in range(2001, 2023, 1):
         YearStart = str(disclosure_year)
-
-        # # 按板块循环
-        # for j in range(0, len(PLATE)):
-        #     DATA['PLATE'] = PLATE[j]
-        #     print(f"当前板块：{DATA['PLATE']}")
-        #     # 按行业循环
-        #     for k in range(len(TRADE)-1, 0, -1):
-        #         DATA['TRADE'] = TRADE[k]
-        #         print(f"当前行业：{DATA['TRADE']}")
-
-        # for i in range(1, 13):
-        # i = str(i).zfill(2)
-        # for date in range(1, 32):
-        #     date = str(date).zfill(2)
-        for i in range(0, len(DATE_START)):
-            seDate = f"{YearStart}-{DATE_START[i]}~{YearStart}-{DATE_END[i]}"
+        for date_range in range(0, len(DATE_START)):
+            seDate = f"{YearStart}-{DATE_START[date_range]}~{YearStart}-{DATE_END[date_range]}"
             # seDate = f"{YearStart}-{i}-{date}~{YearStart}-{i}-{date}"
             DATA['seDate'] = seDate
             print(f"当前爬取区间：{seDate}")
+
+            # # 按板块循环
+            # for plate in PLATE:
+            #     DATA['plate'] = plate
+            #     print(f"当前板块：{plate}")
+
+            #     # 按行业循环
+            #     for ind in TRADE:
+            #         DATA['trade'] = ind
+            #         print(f"当前行业：{ind}")
+
             CircleScrape()
 
         print(f'{disclosure_year} 年的年报已下载完毕.')
