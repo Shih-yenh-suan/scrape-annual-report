@@ -1,12 +1,4 @@
 # -*- encoding: utf-8 -*-
-import requests
-import re
-import datetime
-import random
-import time
-import os
-import pandas as pd
-import threading
 from Config import *
 from CoreScrape import *
 

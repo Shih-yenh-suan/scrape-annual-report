@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+import pandas as pd
 import requests
 import re
 import datetime
@@ -6,7 +7,6 @@ import random
 import time
 import os
 import threading
-import Config
 from Config import *
 
 
