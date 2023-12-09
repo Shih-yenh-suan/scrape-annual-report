@@ -3,7 +3,7 @@ from Config import *
 from CoreScrape import *
 
 
-DATA['column'] = 'third'
+DATA['column'] = COLUMN['深沪京']
 DATA["category"] = CATEGORY[cate_now]
 # DATA['searchkey'] = "社会责任;ESG;环境责任"
 
