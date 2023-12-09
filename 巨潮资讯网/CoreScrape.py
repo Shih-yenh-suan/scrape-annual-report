@@ -11,6 +11,8 @@ from Config import *
 
 
 LOCK = threading.Lock()
+with open(STOP_WORDS_LIST, 'r', encoding='utf-8') as file:
+    STOP_WORDS = [line.strip() for line in file if not line.startswith('#')]
 
 
 def process_page_for_downloads(pageNum):
@@ -118,6 +120,17 @@ def prepare_and_download_file(secCode, title, announcementTime, down_url, secNam
             print(f'{secCode}-{seYear}-{secName}：\t已在其他线程完成下载')
             return
 
+    # 检查报告是否已经记录，补充下载专用
+    if 开启补充下载 == 1:
+        with open(RECORDS, 'r', encoding='utf-8', errors='ignore') as lock_file:
+            downloaded_files = lock_file.readlines()
+            # 如果文件中出现线程准备下载的文件，则跳过
+            if f'{secCode}_{seYear}\n' in downloaded_files:
+                print(f'{secCode}-{seYear}-{secName}：\t已存在记录')
+                return
+            with open(RECORDS, 'a', encoding='utf-8', errors='ignore') as lock_file:
+                lock_file.write(f'{secCode}_{seYear}\n')
+
     # 使用线程锁防止冲突
     with LOCK:
         with open(LOCK_FILE_PATH, 'r', encoding='utf-8', errors='ignore') as lock_file:
@@ -163,7 +176,7 @@ def retry_on_failure(func):
 
 
 def CircleScrape():
-    pageNum = 1
+    pageNum = 0
     while True:
         should_continue = process_page_for_downloads(
             pageNum)

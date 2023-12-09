@@ -5,7 +5,7 @@ from CoreScrape import *
 
 DATA['column'] = COLUMN['深沪京']
 DATA["category"] = CATEGORY[cate_now]
-# DATA['searchkey'] = "社会责任;ESG;环境责任"
+# DATA['searchkey'] = "社会;ESG;环境;可持续"
 
 # 线程锁
 if not os.path.exists(LOCK_FILE_PATH):
@@ -14,11 +14,14 @@ if not os.path.exists(LOCK_FILE_PATH):
 
 df = pd.read_excel(DATE_START_END_SHEET)
 date_list = df["DATE"].dt.strftime('%Y-%m-%d')
-date_list = list(date_list)[::-1]
-date_gap = 1
+date_list = list(date_list)[::-1][:]
+date_gap = 0
 
-DATE_START = date_list[::date_gap]
-DATE_END = date_list[date_gap-1::date_gap]
+if date_gap == 0:
+    DATE_START = DATE_END = date_list[::-1]
+else:
+    DATE_START = date_list[::date_gap]
+    DATE_END = date_list[date_gap-1::date_gap]
 
 if __name__ == '__main__':
 

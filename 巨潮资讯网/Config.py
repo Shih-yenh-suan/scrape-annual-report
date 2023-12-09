@@ -12,6 +12,9 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36',
     'X-Requested-With': 'XMLHttpRequest'}
 
+DATE_START_END_SHEET = "D:\ZZZMydocument\Codes\scrape-annual-reports\巨潮资讯网\日期表.xlsx"
+STOP_WORDS_LIST = "D:\ZZZMydocument\Codes\scrape-annual-reports\巨潮资讯网\停用词.txt"
+
 """表单数据字典"""
 COLUMN = {
     "深沪京": "szse",
@@ -29,6 +32,7 @@ CATEGORY = {
     "A股一季报": "category_yjdbg_szsh",
     "A股三季报": "category_sjdbg_szsh",
     "A股业绩报告": "category_yjygjxz_szsh",
+    "A股社会责任报告": "",
     "三板年度报告": "category_dqgg"
 }
 TRADE = ['农、林、牧、渔业', '电力、热力、燃气及水生产和供应业', '交通运输、仓储和邮政业',
@@ -36,21 +40,11 @@ TRADE = ['农、林、牧、渔业', '电力、热力、燃气及水生产和供
          '房地产业', '水利、环境和公共设施管理业', '卫生和社会工作', '制造业', '批发和零售业',
          '信息传输、软件和信息技术服务业', '租赁和商务服务业', '居民服务、修理和其他服务业', '文化、体育和娱乐业']
 
-
-STOP_WORDS = ['摘要', '英文', '回复', '细则', '基金', '已取消', '延迟', '提示', '意见'
-              '季度', 'eport', '财务指标', '说明', '管理办法', '半年', '半<em>年',
-              '制度', '变更', '表格', '设立', '规则', '签字页', '决议公告', '纲要',
-              '鉴证', '内部控制', '审计', '审核', '债券', '自查', '声明', '整改', '回函',
-              '更正前', '更正公告', '差错更正', '更新前', '修正公告', '修订公告',
-              '更正披露', '更正事项', '专项活动', '方案', '研究报告', '检查', '核查',
-              '补充资料', '补充披露', '补充公告', '补充说明', '补充报告', '的公告',
-              '社会公众', '有限责任', '担保', '责任主体',
-              '季度', '中期'
-              ]  #
-SEARCH_KEY_LIST = "['環境、社會']"
+SEARCH_KEY_LIST = ['社会和', '社会及', '社会、', 'ESG', '社会、', '社会、',
+                   '社会与', '社会责任', '社会企业责任', '社会暨', '社会治理',
+                   '环境报告书', '环境责任', '环境及治理', '环境管理', '环境报告书',
+                   '可持续发展']
 SEARCH_KEYS = ';'.join(SEARCH_KEY_LIST)
-
-DATE_START_END_SHEET = "D:\ZZZMydocument\Codes\scrape-annual-reports\日期表.xlsx"
 
 DATA = {
     'pageNum': '',
@@ -69,7 +63,9 @@ DATA = {
     'isHLtitle': 'true'
 }
 
-cate_now = "三板年度报告"
+cate_now = "A股年报"
 SAVING_PATH = f'E:\Downloads\{cate_now}'
 LOCK_FILE_PATH = f'E:\Downloads\{cate_now}\downloaded_files.txt'
 RECORDS = f'E:\Downloads\{cate_now}\downloaded_id.txt'
+
+开启补充下载 = 0

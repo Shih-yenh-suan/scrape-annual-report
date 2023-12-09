@@ -1,18 +1,22 @@
 import os
 
 
-def save_file_names_and_ids(folder_path):
-    # 获取文件夹中的所有文件
-    files = [file for file in os.listdir(
-        folder_path) if os.path.isfile(os.path.join(folder_path, file))]
+def save_file_names_and_ids(folder_path, txt_path):
+    file_names = []
+    file_ids = []
 
-    # 提取文件名和前11个字符，保存到列表中
-    file_names = [file for file in files]
-    file_ids = [file[:11] for file in files]
+    # 遍历文件夹及其所有子文件夹
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            file_path = os.path.join(root, file)
+
+            # 提取文件名和前11个字符，保存到列表中
+            file_names.append(file)
+            file_ids.append(file[:11])
 
     # 构造保存文件名和文件ID的文件路径
-    file_names_path = os.path.join(folder_path, 'downloaded_files.txt')
-    file_ids_path = os.path.join(folder_path, 'downloaded_id.txt')
+    file_names_path = os.path.join(txt_path, 'downloaded_files.txt')
+    file_ids_path = os.path.join(txt_path, 'downloaded_id.txt')
 
     # 将文件名和文件ID写入对应的文件
     with open(file_names_path, 'w') as file_names_file:
@@ -26,7 +30,7 @@ def save_file_names_and_ids(folder_path):
 
 
 # 输入文件夹路径
-folder_path = "E:\Source_for_sale\A股社会责任报告 PDF+TXT\A股社会责任报告TXT [12364份78.7GB]\附送：环境报告书TXT"
-
+folder_path = r"E:\Source_for_sale\A股年报 PDF+TXT\A股年报TXT [56094份18.8GB]"
+txt_path = r"E:\Downloads"
 # 调用函数保存文件名和文件ID
-save_file_names_and_ids(folder_path)
+save_file_names_and_ids(folder_path, txt_path)
