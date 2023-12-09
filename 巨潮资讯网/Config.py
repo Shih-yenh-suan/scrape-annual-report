@@ -58,3 +58,8 @@ DATA = {
     'sortType': '',
     'isHLtitle': 'true'
 }
+
+cate_now = "三板年度报告"
+SAVING_PATH = f'E:\Downloads\{cate_now}'
+LOCK_FILE_PATH = f'E:\Downloads\{cate_now}\downloaded_files.txt'
+RECORDS = f'E:\Downloads\{cate_now}\downloaded_id.txt'
