@@ -11,6 +11,15 @@ from Config import *
 from CoreScrape import *
 
 
+cate_now = "三板年度报告"
+SAVING_PATH = f'E:\Downloads\{cate_now}'
+LOCK_FILE_PATH = f'E:\Downloads\{cate_now}\downloaded_files.txt'
+RECORDS = f'E:\Downloads\{cate_now}\downloaded_id.txt'
+
+DATA['column'] = 'third'
+DATA["category"] = CATEGORY[cate_now]
+# DATA['searchkey'] = "社会责任;ESG;环境责任"
+
 # 线程锁
 if not os.path.exists(LOCK_FILE_PATH):
     with open(LOCK_FILE_PATH, 'w') as file:

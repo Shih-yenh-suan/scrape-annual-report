@@ -97,12 +97,10 @@ def retry_on_failure(func):
 def get_and_download_pdf_file(filesInfo):
     '''获取链接并下载文件'''
 
-    url = 'http://www.cninfo.com.cn/new/hisAnnouncement/query'
-
     # 获取单页年报的数据，数据格式为json。获取json中的年报信息。
     result = retry_on_failure(
         lambda: requests.post(
-            url, data=data, headers=HEADERS).json()['announcements'])
+            URL, data=data, headers=HEADERS).json()['announcements'])
 
     # 如果当前页面无内容，退出
     if result is None:
