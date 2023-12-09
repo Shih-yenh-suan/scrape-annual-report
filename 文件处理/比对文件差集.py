@@ -38,6 +38,6 @@ for filename_prefix in new_files:
         folder_a_path) if filename.startswith(filename_prefix)][0])
     destination_file = os.path.join(folder_c_path, [filename for filename in os.listdir(
         folder_a_path) if filename.startswith(filename_prefix)][0])
-    shutil.copy(source_file, destination_file)
+    shutil.move(source_file, destination_file)
 
 print("文件比对完成，新文件已复制到文件夹C中。")
