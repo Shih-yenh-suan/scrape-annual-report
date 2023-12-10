@@ -4,8 +4,8 @@ from CoreScrape import *
 
 
 DATA['column'] = COLUMN['深沪京']
-DATA["category"] = CATEGORY[cate_now]
-# DATA['searchkey'] = "社会;ESG;环境;可持续"
+# DATA["category"] = CATEGORY[cate_now]
+DATA['searchkey'] = "年度报告;年报"
 
 # 线程锁
 if not os.path.exists(LOCK_FILE_PATH):
@@ -14,7 +14,7 @@ if not os.path.exists(LOCK_FILE_PATH):
 
 df = pd.read_excel(DATE_START_END_SHEET)
 date_list = df["DATE"].dt.strftime('%Y-%m-%d')
-date_list = list(date_list)[::-1][:]
+date_list = list(date_list)[6300:][::-1]
 date_gap = 0
 
 if date_gap == 0:
@@ -41,11 +41,11 @@ if __name__ == '__main__':
     #     DATA['trade'] = ind
     #     print(f"当前行业：{ind}")
 
-    for date_range in range(0, len(DATE_START)):
+    for i, date_range in enumerate(range(0, len(DATE_START))):
         seDate = f"{DATE_START[date_range]}~{DATE_END[date_range]}"
 
         DATA['seDate'] = seDate
-        print(f"当前爬取区间：{seDate}")
+        print(f"当前爬取区间：{seDate}，为列表第 {i} 个")
 
         CircleScrape()
         if DATE_START[date_range + 1][4] != DATE_START[date_range][4]:

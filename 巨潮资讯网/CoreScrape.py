@@ -85,10 +85,11 @@ def process_announcements(i):
 
     down_url = 'http://static.cninfo.com.cn/' + i['adjunctUrl']
 
-    # # 对于标题中不包含关键词的报告，停止下载
-    # if not any(re.search(k, title) for k in SEARCH_KEY_LIST):
-    #     print(f'{secCode}_{seYear}_{secName}：\t不含关键词 ({title})')
-    #     return
+    # 对于标题中不包含关键词的报告，停止下载
+    if 开启包含关键词 == 1:
+        if not any(re.search(k, title) for k in SEARCH_KEY_LIST):
+            print(f'{secCode}_{seYear}_{secName}：\t不含关键词 ({title})')
+            return
 
     # 对于标题包含停用词的公告，跳过下载
     if any(re.search(k, title) for k in STOP_WORDS):
