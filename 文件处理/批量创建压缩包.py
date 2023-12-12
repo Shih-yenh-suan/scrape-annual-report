@@ -29,7 +29,7 @@ def create_zip_for_each_subfolder(input_folder, output_folder):
 
 
 if __name__ == "__main__":
-    input_folder = ""
+    input_folder = r""
     output_folder = input_folder
 
     if os.path.exists(input_folder) and os.path.isdir(input_folder) and os.path.exists(output_folder) and os.path.isdir(output_folder):
