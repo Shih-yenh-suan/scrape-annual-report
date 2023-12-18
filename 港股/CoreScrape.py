@@ -147,6 +147,6 @@ def retry_on_failure(func):
 
 
 if __name__ == "__main__":
-    for year in range(2001, 2023, 1):
+    for year in range(2007, 2023, 1):
         print("==" * 20 + f'开始处理 {year} 年公告' + "==" * 20)
         process_years(year)
