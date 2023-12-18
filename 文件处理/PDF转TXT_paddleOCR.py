@@ -111,8 +111,8 @@ def pdf_to_txt(input_folder, output_folder):
 
 
 if __name__ == "__main__":
-    pdf_folder_path = "E:\Source_for_sale\A股年报 PDF+TXT\A股年报PDF，无法识别，采用OCR - 副本"
-    output_folder_path = "E:\Source_for_sale\A股年报 PDF+TXT\A股年报PDF，无法识别，采用OCR - 副本"
+    pdf_folder_path = r"D:\ZZZMydocument\Academic_1101\231120_毕业论文\script\[Customer]\环境绩效\ESG"
+    output_folder_path = r"D:\ZZZMydocument\Academic_1101\231120_毕业论文\script\[Customer]\环境绩效\ESG"
 
     pdf_to_txt(pdf_folder_path, output_folder_path)
     print("PDF文件已成功转换为文本文件并保存到目标文件夹。")
