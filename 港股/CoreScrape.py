@@ -43,7 +43,7 @@ def process_years(year):
             try:
                 future.result()  # This will re-raise any exception raised in process_and_download
             except Exception as exc:
-                print(f'An error occurred: {futures}')
+                print(f'An error occurred: {exc}')
 
 
 def process_and_download(file_dict, year):
