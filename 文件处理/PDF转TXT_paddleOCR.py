@@ -24,8 +24,6 @@ def process_page(pdf_file_path, page_num, txt_file_path):
     doc = fitz.open(pdf_file_path)  # 在每个子进程中重新打开PDF文件
     pdf_file = os.path.basename(pdf_file_path)
 
-    print(f"开始处理 {pdf_file}, 页面 {page_num + 1}/{doc.page_count}")  # 开始处理时的输出
-
     try:
         # 创建一个新的 PaddleOCR 实例
         ocr = PaddleOCR(use_angle_cls=True)
@@ -103,16 +101,15 @@ def pdf_to_txt(input_folder, output_folder):
 
     # 获取指定文件夹下的所有PDF文件
     pdf_files = [os.path.join(input_folder, f)
-                 for f in os.listdir(input_folder)
-                 if f.endswith('.pdf')]
+                 for f in os.listdir(input_folder)]
 
     for pdf_file in pdf_files:
         process_pdf(pdf_file, output_folder, 5)
 
 
 if __name__ == "__main__":
-    pdf_folder_path = r"D:\ZZZMydocument\Academic_1101\231120_毕业论文\script\[Customer]\环境绩效\ESG"
-    output_folder_path = r"D:\ZZZMydocument\Academic_1101\231120_毕业论文\script\[Customer]\环境绩效\ESG"
+    pdf_folder_path = r"E:\Downloads\港股年报\港股年报英文版PDF待转码"
+    output_folder_path = r"E:\Downloads\港股年报\港股年报英文版TXT"
 
     pdf_to_txt(pdf_folder_path, output_folder_path)
     print("PDF文件已成功转换为文本文件并保存到目标文件夹。")

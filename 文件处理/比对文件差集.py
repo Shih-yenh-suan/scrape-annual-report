@@ -12,9 +12,9 @@ import shutil
 
 
 # 输入文件夹A和文件夹B的路径
-folder_a_path = r"E:\Source_for_sale\A股年报 PDF+TXT\A股年报PDF [56081份159GB]"
-folder_b_path = r"E:\Source_for_sale\A股年报 PDF+TXT\A股年报TXT [56081份18.8GB]"
-folder_c_path = r"E:\Source_for_sale\A股年报 PDF+TXT\A"  # 新文件夹C的路径
+folder_a_path = r"E:\Downloads\港股年报\港股年报英文版PDF"
+folder_b_path = r"E:\Downloads\港股年报\港股年报英文版TXT"
+folder_c_path = r"E:\Downloads\港股年报\港股年报英文版PDF待转码"  # 新文件夹C的路径
 count_numbers = 11
 
 # 确保文件夹C存在，如果不存在则创建
@@ -39,5 +39,6 @@ for filename_prefix in new_files:
     destination_file = os.path.join(folder_c_path, [filename for filename in os.listdir(
         folder_a_path) if filename.startswith(filename_prefix)][0])
     shutil.move(source_file, destination_file)
+    print(f"Moved {source_file}")
 
 print("文件比对完成，新文件已复制到文件夹C中。")

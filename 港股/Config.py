@@ -22,8 +22,8 @@ HEADERS = {
     "User-Agent": "Thunder Client (https://www.thunderclient.com)"
 }
 STOP_WORDS_LIST = "D:\ZZZMydocument\Codes\scrape-annual-reports\港股\停用词.txt"
-SAVING_PATH = f'E:\Downloads\港股年报\港股年报中文版PDF[27184份]'
-LOCK_FILE_PATH = f'E:\Downloads\港股年报\港股年报中文版PDF[27184份]\downloaded_files.txt'
+SAVING_PATH = f'E:\Downloads\港股年报\港股年报英文版PDF待转码'
+LOCK_FILE_PATH = f'E:\Downloads\港股年报\港股年报英文版PDF待转码\downloaded_files.txt'
 
 # 年份映射表
 
@@ -317,5 +317,5 @@ string_to_year = {
 }
 
 开启补充下载 = 1
-RECORDS = f'E:\Downloads\港股年报\港股年报中文版PDF[27184份]\downloaded_id.txt'
-下载英文版面报告 = 0
+RECORDS = f'E:\Downloads\港股年报\港股年报英文版PDF待转码\downloaded_id.txt'
+下载英文版面报告 = 1

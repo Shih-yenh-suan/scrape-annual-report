@@ -66,5 +66,5 @@ def download_pdfs_multithreaded(folder_path):
 
 
 # Example usage
-save_folder = "E:\\Downloads\\港股年报分页"
-download_pdfs_multithreaded('E:\\Downloads\\港股年报待整合')
+save_folder = r"E:\Downloads\港股年报\港股年报"
+download_pdfs_multithreaded(r'E:\Downloads\港股年报\港股年报')

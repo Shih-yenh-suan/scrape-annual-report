@@ -18,12 +18,10 @@ def move_duplicate_files(source_folder, destination_folder):
     file_dict = {}
     for root, _, files in os.walk(source_folder):
         for file in files:
-            if file.endswith('.pdf'):
-                # 提取文件名的前11个字符
-                prefix = file[:count_numbers]
-                if prefix not in file_dict:
-                    file_dict[prefix] = []
-                file_dict[prefix].append(os.path.join(root, file))
+            prefix = file[:count_numbers]
+            if prefix not in file_dict:
+                file_dict[prefix] = []
+            file_dict[prefix].append(os.path.join(root, file))
 
     # 移动重复文件
     for prefix, file_list in file_dict.items():

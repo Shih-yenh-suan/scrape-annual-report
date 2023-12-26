@@ -179,8 +179,7 @@ def retry_on_failure(func):
 def CircleScrape():
     pageNum = 0
     while True:
-        should_continue = process_page_for_downloads(
-            pageNum)
+        should_continue = process_page_for_downloads(pageNum)
         if not should_continue:
             break
         if pageNum >= 500:

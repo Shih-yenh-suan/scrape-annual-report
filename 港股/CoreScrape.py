@@ -24,8 +24,14 @@ with open(STOP_WORDS_LIST, 'r', encoding='utf-8') as file:
 
 
 def process_years(year):
-    URL = f"https://www1.hkexnews.hk/search/titleSearchServlet.do?sortDir=0&sortByOptions=DateTime&category=0&market=SEHK&stockId=-1&documentType=-1&fromDate={year}0101&toDate={year}1231&title=&searchType=1&t1code=40000&t2Gcode=-2&t2code=40100&rowRange=3000&lang=zh"
 
+    lang = "zh"
+    if 下载英文版面报告 == 1:
+        lang = "en"
+    URL = f"https://www1.hkexnews.hk/search/titleSearchServlet.do?\
+sortDir=0&sortByOptions=DateTime&category=0&market=SEHK&stockId=-1\
+&documentType=-1&fromDate={year}0101&toDate={year}1231&title=&\
+searchType=1&t1code=40000&t2Gcode=-2&t2code=40100&rowRange=3000&lang={lang}"
     """处理指定页码的公告信息并下载相关文件"""
     result = retry_on_failure(lambda:
                               requests.get(URL, headers=HEADERS)).json()["result"]
@@ -43,7 +49,7 @@ def process_years(year):
             try:
                 future.result()  # This will re-raise any exception raised in process_and_download
             except Exception as exc:
-                print(f'An error occurred: {exc}')
+                pass
 
 
 def process_and_download(file_dict, year):
@@ -80,7 +86,8 @@ def process_announcements(file_dict, year):
     file_name = f'{stkcd}_{year_re}_{stock_name}_{title}_{date}.{file_type}'
     file_name = re.sub(r'[\/:\*?"<>| ]', '', file_name)
 
-    short_name = f"{stkcd}_{year_re}_{stock_name}"
+    short_name = f"{stkcd}_{year_re}"
+    short_name = re.sub(r'[\/:\*?"<>| ]', '', short_name)
     # 对于标题包含停用词的公告，跳过下载
     if any(re.search(k, title) for k in STOP_WORDS):
         print(f'{short_name}：\t包括停用词 ({title})')
@@ -99,8 +106,19 @@ def prepare_and_download_file(file_link, file_name, short_name, file_bytes):
 
     # 检查报告是否已经下载
     if os.path.exists(file_path):
-        print(f'{short_name}：\t已存在，跳过下载')
+        # print(f'{short_name}：\t已存在，跳过下载')
         return
+
+    # 检查报告是否已经记录，补充下载专用
+    if 开启补充下载 == 1:
+        with open(RECORDS, 'r', encoding='utf-8', errors='ignore') as lock_file:
+            downloaded_files = lock_file.readlines()
+            # 如果文件中出现线程准备下载的文件，则跳过
+            if f'{short_name}\n' in downloaded_files:
+                print(f'{short_name}：\t已存在记录')
+                return
+            with open(RECORDS, 'a', encoding='utf-8', errors='ignore') as lock_file:
+                lock_file.write(f'{short_name}\n')
 
     # 使用线程锁防止冲突
     with LOCK:
@@ -120,18 +138,18 @@ def prepare_and_download_file(file_link, file_name, short_name, file_bytes):
 
 def download_file(file_link, file_path, short_name, file_bytes):
     """分块下载文件"""
+    # 获取保存路径
+    download_path = os.path.join(
+        os.path.basename(
+            os.path.dirname(file_path)), os.path.basename(file_path))
+    print(f'{short_name}：\t正在下载，大小 {file_bytes}：{download_path}')
+
     with requests.get(file_link, stream=True) as r:
         r.raise_for_status()
         with open(file_path, 'wb') as f:
             for chunk in r.iter_content(chunk_size=8192):
                 if chunk:
                     f.write(chunk)
-    # 获取保存路径
-    download_path = os.path.join(
-        os.path.basename(
-            os.path.dirname(file_path)), os.path.basename(file_path))
-
-    print(f'{short_name}：\t正在下载，大小 {file_bytes}：{download_path}')
 
 
 def retry_on_failure(func):
@@ -147,6 +165,6 @@ def retry_on_failure(func):
 
 
 if __name__ == "__main__":
-    for year in range(2007, 2023, 1):
+    for year in range(2007, 2024, 1):
         print("==" * 20 + f'开始处理 {year} 年公告' + "==" * 20)
         process_years(year)
