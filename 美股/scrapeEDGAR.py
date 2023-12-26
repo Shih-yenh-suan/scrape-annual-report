@@ -35,16 +35,15 @@ def get_json(page):
 
     # 请求网页，出错就反复请求
     try:
-        logging.info(f"开始第 {page} 页, {request_url}")
         response = requests.get(URL, headers=HEADERS, params=DATA)
         json_original = json.loads(response.text)
         file_num = json_original['hits']['total']['value']
         max_page = file_num // 100 + 1
         logging.info(f"共 {max_page} 页， {file_num} 个文件")
         if page > max_page:
-            logging.info(f"第 {page} 已无文件，当前区间完成")
+            logging.info(f"当前区间完成")
             return False
-
+        logging.info(f"开始第 {page} 页, {request_url}")
         # 将成功的请求 URL 添加到文件中
         with open(RECORDS, 'a') as file:
             file.write(request_url + '\n')
