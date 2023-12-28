@@ -22,41 +22,50 @@ def get_json(page):
     with open(RECORDS, 'r', encoding='utf-8') as file:
         saved_urls = file.read().splitlines()
     # 构建参数
-
     DATA['page'] = page
-    if page != 1:
+    if page == 1:
+        if 'from' in DATA:
+            del DATA['from']  # 对于第一页，不需要 from 参数
+    else:
         DATA['from'] = (page - 1) * 100  # 对于后续页码，需要有 from 参数指定开始位置
-
     # 构建完整的请求 URL，并比对
     request_url = f"{URL}?{requests.compat.urlencode(DATA)}"
-    if request_url in saved_urls:
+    if (request_url in saved_urls) and (page != 1):
+        # 如果当前请求url已经存在，则直接跳过，对于第一页永远需要发请求，因为需要获取最大页
         logging.info(f"{page} 已存在，跳过此请求")
         return True
 
-    # 请求网页，出错就反复请求
+    # 请求网页
+
     try:
         response = requests.get(URL, headers=HEADERS, params=DATA)
         json_original = json.loads(response.text)
-        file_num = json_original['hits']['total']['value']
-        max_page = file_num // 100 + 1
-        logging.info(f"共 {max_page} 页， {file_num} 个文件")
+        cop_info_full = retry_on_failure(lambda: json.loads(requests.get(
+            URL, headers=HEADERS, params=DATA).text)['hits']['hits'])
+        # 如果是第一页，或者总页数不存在，则执行请求以获取总页数
+        if page == 1 or 'max_page' not in globals():
+            file_num = retry_on_failure(lambda: json.loads(requests.get(URL, headers=HEADERS, params=DATA).text)[
+                'hits']['total']['value'])
+            global max_page  # 最大页数需要持续存储
+            max_page = file_num // 100 + 1
+            logging.info(f"共 {max_page} 页， {file_num} 个文件")
+
+        # 如果当前页码超过了最大页码，则结束
         if page > max_page:
-            logging.info(f"当前区间完成")
+            logging.info(f"第 {page} 页超过最大页数，当前区间完成")
             return False
+        # 一切正常时，执行爬取程序，并记录url
         logging.info(f"开始第 {page} 页, {request_url}")
-        # 将成功的请求 URL 添加到文件中
         with open(RECORDS, 'a') as file:
             file.write(request_url + '\n')
 
     except Exception as e:
-        logging.error(f"在处理 JSON 数据时出现错误: {e}")
+        logging.error(f" {page} 出错, {request_url}")
         return True
-
-    cop_info_full = json_original['hits']['hits']
-    with ThreadPoolExecutor(max_workers=20) as executor:
+    # 通过try-except后，执行爬取程序
+    with ThreadPoolExecutor(max_workers=5) as executor:
         future_to_cop_info = {executor.submit(
             process_cop_info, c): c for c in cop_info_full}
-
         for future in as_completed(future_to_cop_info):
             future.result()
 
@@ -110,9 +119,8 @@ def get_html_content(Cop_Html, File_Name, File_Info):
         os.makedirs(FILE_PATH)
     output_file_path = os.path.join(FILE_PATH, f'{File_Name}.html')
     if os.path.exists(output_file_path):
-        # logging.info(f'{File_Info}：已存在，跳过下载')
+        logging.info(f'{File_Info}：已存在，跳过下载')
         return
-
     # 获取HTML内容f
     try:
         response = retry_on_failure(lambda:
@@ -126,32 +134,37 @@ def get_html_content(Cop_Html, File_Name, File_Info):
         file.write(html_text)
     # 打印File_Info信息
     logging.info(f"{File_Info}, {Cop_Html}")
-    time.sleep(random.uniform(1, 3))
+    # 随机停止。SEC网站最大流量为1秒请求10次。
+    time.sleep(random.uniform(1.5, 3.5))
 
 
 def retry_on_failure(func):
     """对于请求失败的情况，暂停一段时间"""
-    pause_time = 2
+    pause_time = 5
     retries = 0
     max_retries = 5
     while retries < max_retries:
         try:
-            result = func()
-            return result
+            return func()
         except Exception as e:
-            logging.error(f'Retry {retries + 1}/{max_retries} for error: {e}')
-            time.sleep(pause_time)
             retries += 1
+            logging.error(f'Retry {retries}/{max_retries} for error: {e}')
+            time.sleep(pause_time * retries)
+
     raise Exception(f"Failed after {max_retries} attempts")
 
 
 if __name__ == '__main__':
     for year in range(2023, 2000, -1):
-        page = 1
+        page = 0
+        if 'max_page' in globals():
+            del globals()['max_page']
+
         DATA['startdt'] = f'{year}-01-01'
         DATA['enddt'] = f'{year}-12-31'
         while True:
-            if get_json(page) == False:
-                break
             page += 1
+            if get_json(page) == False or page > 105:
+                break
+        time.sleep(random.uniform(1.5, 3.5))
         logging.info("==" * 20 + f"{year} 已完成" + "==" * 20)

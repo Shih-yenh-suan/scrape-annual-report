@@ -28,7 +28,7 @@ DATA = {
 
 URL = "https://efts.sec.gov/LATEST/search-index"
 
-FILE_PATH = "E:\Downloads\美股报告txt"
+FILE_PATH = "E:\Downloads\美股报告"
 """
 参数：传入json: hits, hits为字符串，对于每个元素，_id中去除-，冒号改成/，形成两位网页标签ids。
 在_source中查找ciks的第一个元素，组成变量cik
