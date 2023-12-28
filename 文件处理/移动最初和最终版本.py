@@ -40,6 +40,6 @@ def organize_versions(input_folder):
 
 
 if __name__ == "__main__":
-    input_folder = "E:\Downloads\港股年报英文版重复——真"
+    input_folder = r""
     organize_versions(input_folder)
     print("文件整理完成。")

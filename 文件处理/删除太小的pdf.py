@@ -8,10 +8,6 @@ import PyPDF2
 '''
 
 
-folder_path = r"D:\ZZZMydocument\Codes\出售-年报爬取\港股"
-pdf_pages_limit = 10
-
-
 def count_pdf_pages(pdf_path):
     # 打开PDF文件
     with open(pdf_path, 'rb') as pdf_file:
@@ -35,6 +31,10 @@ def main():
                     send2trash.send2trash(pdf_path)
 
     print("任务完成")
+
+
+folder_path = r""
+pdf_pages_limit = 10
 
 
 if __name__ == "__main__":

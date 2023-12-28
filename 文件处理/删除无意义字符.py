@@ -34,7 +34,7 @@ def clean_folder(folder_path):
 
 if __name__ == "__main__":
     # 获取文件夹路径输入
-    folder_path = r"E:\Downloads\港股年报\港股年报英文版TXT"
+    folder_path = r""
 
     # 处理文件夹中的所有txt文件
     clean_folder(folder_path)

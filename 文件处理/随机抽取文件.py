@@ -30,7 +30,7 @@ def copy_random_files(src_folder, dest_folder, percentage):
 
 
 if __name__ == "__main__":
-    source_folder = ''
+    source_folder = r''
     destination_folder = '试看'
     percentage = float(input("请输入要复制的文件百分比（10% 输入 10）: "))
 

@@ -51,7 +51,7 @@ def move_files_to_recycle_bin(folder_path):
         print(f"Moved {os.path.basename(file_to_move)} to RecycleBin")
 
 
-folder_path_A = r"E:\Source_for_sale\A股半年报[57477]重复"
+folder_path_A = r""
 
 # 调用函数移动文件到回收站
 move_files_to_recycle_bin(folder_path_A)

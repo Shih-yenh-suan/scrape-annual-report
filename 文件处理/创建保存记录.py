@@ -30,7 +30,7 @@ def save_file_names_and_ids(folder_path, txt_path):
 
 
 # 输入文件夹路径
-folder_path = r"E:\Downloads\港股年报\港股年报英文版PDF"
+folder_path = r""
 txt_path = folder_path
 # 调用函数保存文件名和文件ID
 save_file_names_and_ids(folder_path, txt_path)

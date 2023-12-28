@@ -60,8 +60,8 @@ def process_pdfs_with_cleaning(pdf_folder, output_folder, regex_pattern=r'�|\(
 
 
 if __name__ == "__main__":
-    pdf_folder_path = r"E:\Downloads"
-    output_folder_path = r"E:\Downloads"
+    pdf_folder_path = r""
+    output_folder_path = r""
 
     process_pdfs_with_cleaning(pdf_folder_path, output_folder_path)
     print("PDF文件已成功转换为文本文件并保存到目标文件夹。")

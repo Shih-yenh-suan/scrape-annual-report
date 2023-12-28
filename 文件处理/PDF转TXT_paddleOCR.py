@@ -108,8 +108,8 @@ def pdf_to_txt(input_folder, output_folder):
 
 
 if __name__ == "__main__":
-    pdf_folder_path = r"E:\Downloads\港股年报\港股年报英文版PDF待转码"
-    output_folder_path = r"E:\Downloads\港股年报\港股年报英文版TXT"
+    pdf_folder_path = r""
+    output_folder_path = r""
 
     pdf_to_txt(pdf_folder_path, output_folder_path)
     print("PDF文件已成功转换为文本文件并保存到目标文件夹。")
