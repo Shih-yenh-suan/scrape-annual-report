@@ -39,7 +39,7 @@ def get_pdf_title(pdf_path):
 
 
 # 输入文件夹路径
-folder_path = "E:\Downloads\港股年报分页"
+folder_path = r""
 
 # 调用函数进行PDF合并
 merge_pdfs(folder_path)
