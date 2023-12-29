@@ -31,7 +31,12 @@ def get_copHtml_and_fileName(cop_info):
     # 会计期末
     period_ending = cop_info['_source']['period_ending']
     # 提取企业全称、简称
-    display_names = cop_info['_source']['display_names'][0]
+    if cop_info['_source']['display_names']:
+        display_names = cop_info['_source']['display_names'][0]
+    else:
+        # 处理列表为空的情况，或者设置一个默认值
+        display_names = "None"
+
     full_name_match = re.match(r"([^(]+)", display_names)
     full_name = full_name_match.group(1).strip() if full_name_match else None
     short_name_match = re.match(r"[^\(]+\((.*?)\).*CIK.*", display_names)
@@ -96,20 +101,20 @@ logging.basicConfig(level=logging.INFO,
 
 
 # 定义User-Agent列表
-user_agents = [
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15",
-    "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko",
-    "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.96 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
-    "Thunder Client (https://www.thunderclient.com)",
-    # 更多User-Agent
-]
+# user_agents = [
+#     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+#     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15",
+#     "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko",
+#     "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.96 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+#     "Thunder Client (https://www.thunderclient.com)",
+#     # 更多User-Agent
+# ]
 
 # 你可以在需要的时候调用headers
 # 每次调用时，User-Agent将从列表中随机选择
 HEADERS = {
     "Accept": "*/*",
-    "User-Agent": random.choice(user_agents)
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0"
 }
 
 DATA = {

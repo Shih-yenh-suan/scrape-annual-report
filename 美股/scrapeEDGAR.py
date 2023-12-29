@@ -54,7 +54,7 @@ def get_json(page):
 
 
 if __name__ == '__main__':
-    for year in range(2013, 2000, -1):
+    for year in range(2009, 2000, -1):
         page = 0
         if 'max_page' in globals():
             del globals()['max_page']
@@ -65,5 +65,5 @@ if __name__ == '__main__':
             page += 1
             if get_json(page) == False:
                 break
-        time.sleep(random.uniform(1.5, 3.5))
+        time.sleep(5)
         logging.info("==" * 20 + f"{year} 已完成" + "==" * 20)
