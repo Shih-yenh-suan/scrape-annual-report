@@ -2,12 +2,12 @@ import os
 import shutil
 
 # 输入文件夹路径
-folder_path = r""
-
+folder_path = r"N:\Source_for_sale\美股10-K和20-F年报文件"
+NUM = 8
 # 遍历文件夹中的txt文件
 for filename in os.listdir(folder_path):
     # 提取年份标记
-    year = filename[7:11]
+    year = filename[NUM:NUM + 4]
 
     # 创建对应年份的文件夹（如果不存在）
     year_folder = os.path.join(folder_path, year)

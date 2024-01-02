@@ -18,7 +18,7 @@ def move_duplicate_files(source_folder, destination_folder):
     file_dict = {}
     for root, _, files in os.walk(source_folder):
         for file in files:
-            prefix = file[:count_numbers]
+            prefix = file[:NUM]
             if prefix not in file_dict:
                 file_dict[prefix] = []
             file_dict[prefix].append(os.path.join(root, file))
@@ -31,12 +31,12 @@ def move_duplicate_files(source_folder, destination_folder):
                 shutil.move(file_path, os.path.join(
                     destination_folder, os.path.basename(file_path)))
                 print(
-                    f"Moved {os.path.basename(file_path)} to {destination_folder}")
+                    f"Moved {os.path.basename(file_path)}")
 
 
 if __name__ == "__main__":
-    input_folder = r''
-    output_folder = r''
-    count_numbers = 11
+    input_folder = r'N:\Source_for_sale\美股报告10-K文件'
+    output_folder = r'N:\Source_for_sale\美股报告10-K文件重复'
+    NUM = 14
 
     move_duplicate_files(input_folder, output_folder)

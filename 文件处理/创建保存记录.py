@@ -12,7 +12,7 @@ def save_file_names_and_ids(folder_path, txt_path):
 
             # 提取文件名和前11个字符，保存到列表中
             file_names.append(file)
-            file_ids.append(file[:10])
+            file_ids.append(file[:NUM])
 
     # 构造保存文件名和文件ID的文件路径
     file_names_path = os.path.join(txt_path, 'downloaded_files.txt')
@@ -32,5 +32,6 @@ def save_file_names_and_ids(folder_path, txt_path):
 # 输入文件夹路径
 folder_path = r"E:\Source_for_sale\港股年报【中27202】【英27172】\港股年报中文版TXT"
 txt_path = folder_path
+NUM = 10
 # 调用函数保存文件名和文件ID
 save_file_names_and_ids(folder_path, txt_path)
