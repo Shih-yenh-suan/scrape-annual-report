@@ -7,6 +7,7 @@ import random
 import time
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from scrapeEDGAR import FILE_PATH, 开启补充下载, FILE_DOWNLOADS
 
 
 def process_cop_info(cop_info):
@@ -50,7 +51,7 @@ def get_copHtml_and_fileName(cop_info):
     File_Name = f"{ciks[3:]}_{period_ending}_{short_name}_{full_name}_{file_form}_{file_date}"
     File_Name = re.sub(r'[\\\/:\*?"<>|]', '', File_Name)
     # 拼成文件信息
-    File_Info = f"{ciks[3:]}_{period_ending}"
+    File_Info = f"{ciks[3:]}_{period_ending[:4]}"
 
     return Cop_Html, File_Name, File_Info
 
@@ -63,6 +64,17 @@ def get_html_content(Cop_Html, File_Name, File_Info):
     if os.path.exists(output_file_path):
         logging.info(f'{File_Info}：已存在，跳过下载')
         return
+        # 检查报告是否已经记录，补充下载专用
+    if 开启补充下载 == 1:
+        with open(FILE_DOWNLOADS, 'r', encoding='utf-8', errors='ignore') as lock_file:
+            downloaded_files = lock_file.readlines()
+            # 如果文件中出现线程准备下载的文件，则跳过
+            if f'{File_Name}.html\n' in downloaded_files:
+                logging.info(f'{File_Name}：已存在记录')
+                return
+            with open(FILE_DOWNLOADS, 'a', encoding='utf-8', errors='ignore') as lock_file:
+                lock_file.write(f'{File_Name}.html\n')
+
     # 获取HTML内容f
     try:
         response = retry_on_failure(lambda:
@@ -128,16 +140,12 @@ DATA = {
 
 URL = "https://efts.sec.gov/LATEST/search-index"
 
-FILE_PATH = "E:\Downloads\美股报告"
 """
 参数：传入json: hits, hits为字符串，对于每个元素，_id中去除-，冒号改成/，形成两位网页标签ids。
 在_source中查找ciks的第一个元素，组成变量cik
 网页： https://www.sec.gov/Archives/edgar/data/cik/ids
 
 """
-开启补充下载 = 1
-RECORDS = f'{FILE_PATH}\RECORDS.txt'
-
-if not os.path.exists(RECORDS):
-    with open(RECORDS, 'w') as file:
+if not os.path.exists(FILE_DOWNLOADS):
+    with open(FILE_DOWNLOADS, 'w') as file:
         pass

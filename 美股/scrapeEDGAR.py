@@ -3,9 +3,6 @@ from config import *
 
 
 def get_json(page):
-    # 导入记录文件
-    with open(RECORDS, 'r', encoding='utf-8') as file:
-        saved_urls = file.read().splitlines()
     # 构建参数
     DATA['page'] = page
     if page == 1:
@@ -15,10 +12,6 @@ def get_json(page):
         DATA['from'] = (page - 1) * 100  # 对于后续页码，需要有 from 参数指定开始位置
     # 构建完整的请求 URL，并比对
     request_url = f"{URL}?{requests.compat.urlencode(DATA)}"
-    if (request_url in saved_urls) and (page != 1):
-        # 如果当前请求url已经存在，则直接跳过，对于第一页永远需要发请求，因为需要获取最大页
-        logging.info(f"{page} 已存在，跳过此请求")
-        return True
     # 请求网页
     try:
         cop_info_full = retry_on_failure(lambda: json.loads(requests.get(
@@ -37,8 +30,6 @@ def get_json(page):
             return False
         # 一切正常时，执行爬取程序，并记录url
         logging.info(f"开始第 {page} 页, {request_url}")
-        with open(RECORDS, 'a') as file:
-            file.write(request_url + '\n')
     except Exception as e:
         logging.error(f" {page} 出错, {request_url}")
         time.sleep(5)
@@ -53,8 +44,13 @@ def get_json(page):
     return True
 
 
+开启补充下载 = 1
+ROOT = "N:\Source_for_sale\美股年报"
+FILE_DOWNLOADS = f'{ROOT}\downloaded_files.txt'
+FILE_PATH = f"{ROOT}\报告文件"
+
 if __name__ == '__main__':
-    for year in range(2009, 2000, -1):
+    for year in range(2024, 2001, -1):
         page = 0
         if 'max_page' in globals():
             del globals()['max_page']
@@ -67,3 +63,4 @@ if __name__ == '__main__':
                 break
         time.sleep(5)
         logging.info("==" * 20 + f"{year} 已完成" + "==" * 20)
+    logging.info("全部完成！！")

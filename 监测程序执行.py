@@ -30,6 +30,9 @@ def run_script():
         # 记录最后输出时间
         last_output_time = [time.time()]
 
+        # 记录被监测程序是否正常结束
+        process_complete = [False]
+
         # 启动监控线程
         monitor_thread = threading.Thread(
             target=monitor_output, args=(proc, last_output_time))
@@ -42,6 +45,10 @@ def run_script():
                 print("未检测到输出，正在重启脚本...")
                 proc.kill()
                 break
+            # 检查被监测程序是否正常结束
+            if process_complete[0]:
+                print("被监测程序已正常结束，结束本程序。")
+                return
 
 
 if __name__ == "__main__":
