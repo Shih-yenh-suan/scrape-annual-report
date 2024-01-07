@@ -91,9 +91,12 @@ def process_announcements(i):
     if secCode == None:
         secCode = i['orgId'][5:11]
 
+    # 处理文件后缀
+    file_type = 'html' if i['adjunctType'] == None else 'pdf'
+
     # 整合文件名
-    fileShortName = f'{secCode}_{seYear}_{secName}.pdf'
-    fileName = f'{secCode}_{seYear}_{secName}_{title}_{announcementTime}.pdf'
+    fileShortName = f'{secCode}_{seYear}_{secName}.{file_type}'
+    fileName = f'{secCode}_{seYear}_{secName}_{title}_{announcementTime}.{file_type}'
 
     # 获取下载链接
     downloadUrl = 'http://static.cninfo.com.cn/' + i['adjunctUrl']

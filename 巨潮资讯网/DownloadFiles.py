@@ -31,7 +31,7 @@ DATA_PARAMS = {
 }
 
 
-interval = 5  # 起始日期和结束日期之间的间隔。
+interval = 31  # 起始日期和结束日期之间的间隔。
 start_date = '2000-01-01'  # 起始日期。默认为2000-01-01
 end_date = None  # 默认为今天
 
@@ -45,7 +45,7 @@ if 开启包含关键词 == 1:
 if __name__ == '__main__':
     DATA_RANGE = create_date_intervals(interval, start_date, end_date)
 
-    DATA_RANGE = DATA_RANGE[::-1]
+    # DATA_RANGE = DATA_RANGE[::-1] # 是否倒序
 
     for i, seDate in enumerate(DATA_RANGE):
 

@@ -134,7 +134,6 @@ STOP_WORDS_DICT = {
                   '补充公告',
                   '补充说明',
                   '补充报告',
-                  '的公告',
                   '社会公众',
                   '有限责任',
                   '担保',
@@ -173,7 +172,6 @@ root_file_path = "N:\Source_for_sale"
 
 SAVING_PATH = f'{root_file_path}\{file_type}'
 LOCK_FILE_PATH = f'{root_file_path}\{file_type}\downloaded_files.txt'
-RECORDS = f'{root_file_path}\{file_type}\downloaded_id.txt'
 STOP_WORDS = STOP_WORDS_DICT["yugao_sw"]
 
 ''
