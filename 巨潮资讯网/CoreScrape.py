@@ -10,7 +10,41 @@ import threading
 from Config import *
 
 
+STOP_WORDS_LIST = "D:\ZZZMydocument\Codes\scrape-annual-reports\巨潮资讯网\停用词.txt"
+URL = 'http://www.cninfo.com.cn/new/hisAnnouncement/query'
+HEADERS = {
+    'Accept': '*/*',
+    'Accept-Encoding': 'gzip, deflate',
+    'Accept-Language': 'zh-CN,zh;q=0.9',
+    'Connection': 'keep-alive',
+    'Content-Length': '181',
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    'Host': 'www.cninfo.com.cn',
+    'Origin': 'http://www.cninfo.com.cn',
+    'Referer': 'http://www.cninfo.com.cn/new/commonUrl/pageOfSearch?url=disclosure/list/search',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36',
+    'X-Requested-With': 'XMLHttpRequest'}
+DATA = {
+    'pageNum': '',
+    'pageSize': 30,
+    'column': '',
+    'tabName': 'fulltext',
+    'plate': '',
+    'stock': '',
+    'searchkey': '',
+    'secid': '',
+    'category': '',
+    'trade': '',
+    'seDate': '',
+    'sortName': '',
+    'sortType': '',
+    'isHLtitle': 'true'
+}
 LOCK = threading.Lock()
+# 线程锁
+if not os.path.exists(LOCK_FILE_PATH):
+    with open(LOCK_FILE_PATH, 'w') as file:
+        pass  # Just create the file if it does not exist
 with open(STOP_WORDS_LIST, 'r', encoding='utf-8') as file:
     STOP_WORDS = [line.strip() for line in file if not line.startswith('#')]
 
@@ -87,7 +121,7 @@ def process_announcements(i):
 
     # 对于标题中不包含关键词的报告，停止下载
     if 开启包含关键词 == 1:
-        if not any(re.search(k, title) for k in SEARCH_KEY_LIST):
+        if not any(re.search(k, title) for k in SEARCH_KEY_LIST[file_type]):
             print(f'{secCode}_{seYear}_{secName}：\t不含关键词 ({title})')
             return
 
@@ -185,3 +219,29 @@ def CircleScrape():
         if pageNum >= 500:
             break
         pageNum += 1
+
+
+def create_date_intervals(interval, start_date="2000-01-01", end_date=None):
+    # 将字符串日期转换为datetime对象
+    start = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+    # 如果没有提供结束日期，则默认为今天
+    if end_date is None:
+        end = datetime.datetime.today()
+    else:
+        end = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+    # 初始化日期列表
+    intervals = []
+    # 当前开始日期
+    current_start = start
+    while current_start < end:
+        # 计算当前结束日期
+        current_end = current_start + datetime.timedelta(days=interval)
+        # 如果当前结束日期超过了总结束日期，就将其设置为总结束日期
+        if current_end > end:
+            current_end = end
+        # 将当前日期区间添加到列表
+        intervals.append(
+            f"{current_start.strftime('%Y-%m-%d')}~{current_end.strftime('%Y-%m-%d')}")
+        # 更新下一个区间的开始日期
+        current_start = current_end + datetime.timedelta(days=1)
+    return intervals
