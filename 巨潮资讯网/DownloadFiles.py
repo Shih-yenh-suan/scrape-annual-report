@@ -36,10 +36,10 @@ start_date = '2000-01-01'  # 起始日期。默认为2000-01-01
 end_date = None  # 默认为今天
 
 DATA['column'] = "szse"
-DATA['category'] = 'category_yjygjxz_szsh'
+DATA['category'] = 'category_ndbg_szsh'
 
 if 开启包含关键词 == 1:
-    DATA['searchkey'] = ";".join(SEARCH_KEY_LIST["normal_sw"])
+    DATA['searchkey'] = ";".join(SEARCH_KEY_LIST["年报"])
 
 
 if __name__ == '__main__':

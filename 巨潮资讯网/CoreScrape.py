@@ -137,22 +137,24 @@ def download_file(downloadUrl, title, fileShortName, fileName, announcementTime)
             print(f'{fileShortName}：\t已记录在文件中')
             return
     # 对于没有记录但是已经有同一代码、同一时间报告的文件，比对日期，如果日期更新则下载，否则不下载
+    # # 获取代码和年份
+    fileCodeYear = fileShortName[:11]
     pattern = re.compile(
-        rf"{re.escape(fileShortName)}_(\d{{4}}-\d{{2}}-\d{{2}})\.\w+")
-    # # 用 pattern 获取 fileShortName 和 announcementTime。
+        rf"{re.escape(fileCodeYear)}_.*_.*_(\d{{4}}-\d{{2}}-\d{{2}})\.\w+\n")
+    # # 用 pattern 获取 fileCodeYear 和 announcementTime。
     matching_files = [
         f for f in downloaded_files if pattern.match(f)]
-    # # 在 downloaded_files 中寻找能够匹配 fileShortName 的字符串，忽略日期
-    if matching_files:
-        latest_file = max(matching_files, key=lambda x: datetime.strptime(
-            re.search(r"_(\d{4}-\d{2}-\d{2})\.\w+", x).group(1), "%Y-%m-%d"))
-        latest_announcement_time = datetime.strptime(
+    # # 在 downloaded_files 中寻找能够匹配 fileCodeYear 的字符串，忽略日期
+    if len(matching_files) != 0:
+        latest_file = max(matching_files, key=lambda x: datetime.datetime.strptime(
+            re.search(r"_(\d{4}\-\d{2}\-\d{2})\.pdf", x).group(1), "%Y-%m-%d"))
+        latest_announcement_time = datetime.datetime.strptime(
             re.search(r"_(\d{4}-\d{2}-\d{2})\.\w+", latest_file).group(1), "%Y-%m-%d")
-
-        if datetime.strptime(announcementTime, "%Y-%m-%d") <= latest_announcement_time:
-            print(f'{fileShortName}：\t已存在更新的版本')
+        if datetime.datetime.strptime(announcementTime, "%Y-%m-%d") <= latest_announcement_time:
+            print(
+                f'{fileShortName}：\t已存在更新的版本:{str(latest_announcement_time)[:10]}')
             return
-
+        print(f'{fileShortName}：\t更新:{latest_announcement_time}')
     # 一切都符合要求，分块下载文件
     try:
         with requests.get(downloadUrl, stream=True) as r:
@@ -164,8 +166,12 @@ def download_file(downloadUrl, title, fileShortName, fileName, announcementTime)
                 temp_name = tmp_file.name
         shutil.move(temp_name, filePath)
         print(f'{fileShortName}：\t已下载到 {filePath}')
+        # 对于正下载或已下载的文件，保存文件名。
+        with open(LOCK_FILE_PATH, 'a', encoding='utf-8', errors='ignore') as lock_file:
+            lock_file.write(f'{fileName}\n')
+
     except Exception as e:
-        print(f'{fileShortName}下载失败:  {e}')
+        print(f'{fileShortName}： \t下载失败: {e}')
 
 
 def retry_on_failure(func):

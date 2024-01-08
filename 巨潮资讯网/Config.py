@@ -93,14 +93,11 @@ STOP_WORDS_DICT = {
                   '基金',
                   '已取消',
                   '延迟',
-                  '提示',
                   '意见',
                   'eport',
                   '财务指标',
-                  '说明',
                   '管理办法',
                   '制度',
-                  '变更',
                   '表格',
                   '设立',
                   '规则',
@@ -166,12 +163,10 @@ SEARCH_KEY_LIST = {
 
 
 开启包含关键词 = 0
-file_type = "A股业绩预告"
-root_file_path = "N:\Source_for_sale"
+file_type = "年报"
+root_file_path = "E:\[待整理]Source_for_sale"
 
 
 SAVING_PATH = f'{root_file_path}\{file_type}'
 LOCK_FILE_PATH = f'{root_file_path}\{file_type}\downloaded_files.txt'
-STOP_WORDS = STOP_WORDS_DICT["yugao_sw"]
-
-''
+STOP_WORDS = STOP_WORDS_DICT["normal_sw"]
