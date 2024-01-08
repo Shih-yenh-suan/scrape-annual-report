@@ -17,7 +17,7 @@ def format_date(date_str):
 def extract_date_from_content(content):
     """ 提取内容中的日期并格式化 """
     match = re.search(
-        r'annualreport.{0,15}section.*?for.{0,20}end(?:ed|ing)(\w*\d+,?\d{4})', content, re.IGNORECASE)
+        r'annualreport.{0,15}section.*?for.{0,20}end(?:ed|ing)(\w{0,15}\d+,?\d{4})', content, re.IGNORECASE)
     if match:
         return match
     return None
@@ -88,7 +88,7 @@ def main():
             process_html_files(filename)
     elif 开启重命名 == 0:
         total_files = len(files)
-        with ProcessPoolExecutor(max_workers=18) as executor:
+        with ProcessPoolExecutor(max_workers) as executor:
             futures = {executor.submit(
                 process_html_files, file): file for file in files}
 
@@ -105,6 +105,7 @@ def main():
         print("输入错误")
 
 
+max_workers = 20
 开启重命名 = 1
 correctTimeFolder = r"N:\Source_for_sale\美股年报\美股10-K和20-F年报文件\correctTimeFolder"
 if 开启重命名 == 0:
