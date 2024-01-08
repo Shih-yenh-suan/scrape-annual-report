@@ -10,7 +10,8 @@ def organize_versions(input_folder):
     # 根据前11个字符分组
     grouped_files = {}
     for pdf_file in pdf_files:
-        prefix = pdf_file[:10]
+        parts = pdf_file.split("_")
+        prefix = "_".join(parts[:2])
         if prefix not in grouped_files:
             grouped_files[prefix] = []
         grouped_files[prefix].append(pdf_file)
@@ -18,7 +19,7 @@ def organize_versions(input_folder):
     # 遍历每组文件，根据日期排序并移动到相应文件夹
     for prefix, files in grouped_files.items():
         sorted_files = sorted(
-            files, key=lambda x: datetime.strptime(x[-14:-4], '%d-%m-%Y'))
+            files, key=lambda x: datetime.strptime(x[-14:-4], '%Y-%m-%d'))
         newest_file = sorted_files[-1]
         oldest_file = sorted_files[0]
 
@@ -40,6 +41,6 @@ def organize_versions(input_folder):
 
 
 if __name__ == "__main__":
-    input_folder = r""
+    input_folder = r"N:\Source_for_sale\美股年报\美股10-K和20-F年报文件\重复"
     organize_versions(input_folder)
     print("文件整理完成。")
