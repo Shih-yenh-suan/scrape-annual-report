@@ -108,7 +108,6 @@ if __name__ == "__main__":
                 except Exception as e:
                     print(f"Error processing file {file}: {e}")
                 else:
-                    progress = (i + 1) / total_files
-                    print(f"Progress: {progress * 100:.2f}%")
+                    print(f"Progress: {(i + 1)} / {total_files}")
     else:
         print("输入错误")
