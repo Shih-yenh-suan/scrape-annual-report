@@ -102,10 +102,11 @@ def process_announcements(i):
     downloadUrl = 'http://static.cninfo.com.cn/' + i['adjunctUrl']
 
     # 执行下载函数
-    download_file(downloadUrl, title, fileShortName, fileName)
+    download_file(downloadUrl, title, fileShortName,
+                  fileName, announcementTime)
 
 
-def download_file(downloadUrl, title, fileShortName, fileName):
+def download_file(downloadUrl, title, fileShortName, fileName, announcementTime):
     """判断，并分块下载文件"""
 
     # 对于标题中不包含关键词的报告，跳过下载
@@ -134,6 +135,22 @@ def download_file(downloadUrl, title, fileShortName, fileName):
         downloaded_files = lock_file.readlines()
         if f'{fileName}\n' in downloaded_files:
             print(f'{fileShortName}：\t已记录在文件中')
+            return
+    # 对于没有记录但是已经有同一代码、同一时间报告的文件，比对日期，如果日期更新则下载，否则不下载
+    pattern = re.compile(
+        rf"{re.escape(fileShortName)}_(\d{{4}}-\d{{2}}-\d{{2}})\.\w+")
+    # # 用 pattern 获取 fileShortName 和 announcementTime。
+    matching_files = [
+        f for f in downloaded_files if pattern.match(f)]
+    # # 在 downloaded_files 中寻找能够匹配 fileShortName 的字符串，忽略日期
+    if matching_files:
+        latest_file = max(matching_files, key=lambda x: datetime.strptime(
+            re.search(r"_(\d{4}-\d{2}-\d{2})\.\w+", x).group(1), "%Y-%m-%d"))
+        latest_announcement_time = datetime.strptime(
+            re.search(r"_(\d{4}-\d{2}-\d{2})\.\w+", latest_file).group(1), "%Y-%m-%d")
+
+        if datetime.strptime(announcementTime, "%Y-%m-%d") <= latest_announcement_time:
+            print(f'{fileShortName}：\t已存在更新的版本')
             return
 
     # 一切都符合要求，分块下载文件
