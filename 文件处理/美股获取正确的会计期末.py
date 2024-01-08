@@ -3,7 +3,7 @@ import re
 from datetime import datetime
 from bs4 import BeautifulSoup
 import shutil
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor
 
 
 def format_date(date_str):
@@ -99,5 +99,5 @@ if __name__ == "__main__":
             process_html_files(filename)
 
     elif 开启重命名 == 0:
-        with ThreadPoolExecutor(max_workers=20) as executor:
+        with ProcessPoolExecutor(max_workers=20) as executor:
             executor.map(process_html_files, files)

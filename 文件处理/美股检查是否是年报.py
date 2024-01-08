@@ -1,4 +1,4 @@
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor
 import os
 import re
 import shutil
@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     # 使用ProcessPoolExecutor来并行处理文件
     if 是否开启多线程 == 1:
-        with ThreadPoolExecutor(max_workers=20) as executor:
+        with ProcessPoolExecutor(max_workers=20) as executor:
             for i, filename in enumerate(files):
                 executor.submit(process_html_files, filename, i, len(files))
     else:
