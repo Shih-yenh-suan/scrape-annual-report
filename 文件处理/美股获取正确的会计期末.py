@@ -78,16 +78,7 @@ def process_html_files(filename):
         print(f"{file_date} vs {content_date}, 文件 {filename}")
 
 
-开启重命名 = 0
-correctTimeFolder = r"N:\Source_for_sale\美股年报\美股10-K和20-F年报文件\correctTimeFolder"
-if 开启重命名 == 0:
-    FOLDER = "N:\Source_for_sale\\美股年报\\美股10-K和20-F年报文件\\"
-elif 开启重命名 == 1:
-    FOLDER = correctTimeFolder
-
-
-if __name__ == "__main__":
-
+def main():
     if not os.path.exists(correctTimeFolder):
         os.mkdir(correctTimeFolder)
     files = [filename for filename in os.listdir(
@@ -112,3 +103,15 @@ if __name__ == "__main__":
                         f"Progress: {(i+1)}/{total_files}, {(i+1)/total_files*100:.2f}%")
     else:
         print("输入错误")
+
+
+开启重命名 = 1
+correctTimeFolder = r"N:\Source_for_sale\美股年报\美股10-K和20-F年报文件\correctTimeFolder"
+if 开启重命名 == 0:
+    FOLDER = "N:\Source_for_sale\\美股年报\\美股10-K和20-F年报文件\\"
+elif 开启重命名 == 1:
+    FOLDER = correctTimeFolder
+
+
+if __name__ == "__main__":
+    main()
