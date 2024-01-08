@@ -3,7 +3,7 @@ import re
 from datetime import datetime
 from bs4 import BeautifulSoup
 import shutil
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, as_completed
 
 
 def format_date(date_str):
@@ -81,7 +81,7 @@ def process_html_files(filename):
 开启重命名 = 0
 correctTimeFolder = r"N:\Source_for_sale\美股年报\美股10-K和20-F年报文件\correctTimeFolder"
 if 开启重命名 == 0:
-    FOLDER = r"N:\Source_for_sale\美股年报\美股10-K和20-F年报文件\2015"
+    FOLDER = "N:\Source_for_sale\\美股年报\\美股10-K和20-F年报文件\\"
 elif 开启重命名 == 1:
     FOLDER = correctTimeFolder
 
@@ -90,14 +90,25 @@ if __name__ == "__main__":
 
     if not os.path.exists(correctTimeFolder):
         os.mkdir(correctTimeFolder)
-
     files = [filename for filename in os.listdir(
         FOLDER) if filename.endswith('.html')]
-
     if 开启重命名 == 1:
         for filename in files:
             process_html_files(filename)
-
     elif 开启重命名 == 0:
-        with ProcessPoolExecutor(max_workers=20) as executor:
-            executor.map(process_html_files, files)
+        total_files = len(files)
+        with ProcessPoolExecutor(max_workers=18) as executor:
+            futures = {executor.submit(
+                process_html_files, file): file for file in files}
+
+            for i, future in enumerate(as_completed(futures)):
+                file = futures[future]
+                try:
+                    future.result()  # 获取结果，如果有异常会在这里抛出
+                except Exception as e:
+                    print(f"Error processing file {file}: {e}")
+                else:
+                    progress = (i + 1) / total_files
+                    print(f"Progress: {progress * 100:.2f}%")
+    else:
+        print("输入错误")
