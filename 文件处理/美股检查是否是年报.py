@@ -1,4 +1,4 @@
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 import os
 import re
 import shutil
@@ -30,13 +30,14 @@ def process_html_files(filename, x, y):
         return
 
 
-destination_folder = r"N:\Source_for_sale\美股年报\美股10-K和20-F年报文件\重复"
-# 需要检索的特定字符列表
-source_folder = r"N:\Source_for_sale\美股年报\美股10-K和20-F年报文件\2006"
 chooiceList = ["X", "Ý", "Þ", "☒", "☑", "■", "√", "⌧", "S", "Q", "×",
                "🗷,", "R", "M10", "M20", "✓", "20549", "", "Ÿ", "Ö", "Ü", "T"]
 是否开启多线程 = 1
+destination_folder = r"N:\Source_for_sale\美股年报\美股10-K和20-F年报文件\重复"
+# 需要检索的特定字符列表
 
+
+source_folder = r"N:\Source_for_sale\美股年报\美股10-K和20-F年报文件\2007"
 if __name__ == "__main__":
 
     files = [filename for filename in os.listdir(
@@ -44,7 +45,7 @@ if __name__ == "__main__":
 
     # 使用ProcessPoolExecutor来并行处理文件
     if 是否开启多线程 == 1:
-        with ProcessPoolExecutor(max_workers=20) as executor:
+        with ThreadPoolExecutor(max_workers=20) as executor:
             for i, filename in enumerate(files):
                 executor.submit(process_html_files, filename, i, len(files))
     else:

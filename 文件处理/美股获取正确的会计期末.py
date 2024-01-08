@@ -3,7 +3,7 @@ import re
 from datetime import datetime
 from bs4 import BeautifulSoup
 import shutil
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 
 
 def format_date(date_str):
@@ -78,43 +78,26 @@ def process_html_files(filename):
         print(f"{file_date} vs {content_date}, 文件 {filename}")
 
 
-# 开启重命名 = 0
-# correctTimeFolder = r"N:\Source_for_sale\美股年报\美股10-K和20-F年报文件\correctTimeFolder"
-# if 开启重命名 == 0:
-#     FOLDER = r"N:\Source_for_sale\美股年报\美股10-K和20-F年报文件\2019"
-# elif 开启重命名 == 1:
-#     FOLDER = correctTimeFolder
-
-
-# if __name__ == "__main__":
-
-#     if not os.path.exists(correctTimeFolder):
-#         os.mkdir(correctTimeFolder)
-
-#     files = [filename for filename in os.listdir(
-#         FOLDER) if filename.endswith('.html')]
-
-#     if 开启重命名 == 1:
-#         for filename in files:
-#             process_html_files(filename)
-
-#     elif 开启重命名 == 0:
-#         with ProcessPoolExecutor(max_workers=10) as executor:
-#             executor.map(process_html_files, files)
 开启重命名 = 0
 correctTimeFolder = r"N:\Source_for_sale\美股年报\美股10-K和20-F年报文件\correctTimeFolder"
+if 开启重命名 == 0:
+    FOLDER = r"N:\Source_for_sale\美股年报\美股10-K和20-F年报文件\2015"
+elif 开启重命名 == 1:
+    FOLDER = correctTimeFolder
 
-for i in range(2007, 2023):
 
-    FOLDER = f"N:\Source_for_sale\美股年报\美股10-K和20-F年报文件\{i}"
+if __name__ == "__main__":
 
-    if __name__ == "__main__":
+    if not os.path.exists(correctTimeFolder):
+        os.mkdir(correctTimeFolder)
 
-        if not os.path.exists(correctTimeFolder):
-            os.mkdir(correctTimeFolder)
+    files = [filename for filename in os.listdir(
+        FOLDER) if filename.endswith('.html')]
 
-        files = [filename for filename in os.listdir(
-            FOLDER) if filename.endswith('.html')]
+    if 开启重命名 == 1:
+        for filename in files:
+            process_html_files(filename)
 
-        with ProcessPoolExecutor(max_workers=10) as executor:
+    elif 开启重命名 == 0:
+        with ThreadPoolExecutor(max_workers=20) as executor:
             executor.map(process_html_files, files)
