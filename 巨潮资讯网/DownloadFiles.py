@@ -45,7 +45,7 @@ if 开启包含关键词 == 1:
 if __name__ == '__main__':
     DATA_RANGE = create_date_intervals(interval, start_date, end_date)
 
-    # DATA_RANGE = DATA_RANGE[::-1] # 是否倒序
+    DATA_RANGE = DATA_RANGE[::-1]  # 是否倒序
 
     for i, seDate in enumerate(DATA_RANGE):
 

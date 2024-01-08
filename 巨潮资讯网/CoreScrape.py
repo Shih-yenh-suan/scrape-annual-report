@@ -95,7 +95,7 @@ def process_announcements(i):
     file_type = 'html' if i['adjunctType'] == None else 'pdf'
 
     # 整合文件名
-    fileShortName = f'{secCode}_{seYear}_{secName}.{file_type}'
+    fileShortName = f'{secCode}_{seYear}_{secName}'
     fileName = f'{secCode}_{seYear}_{secName}_{title}_{announcementTime}.{file_type}'
 
     # 获取下载链接
