@@ -2,6 +2,13 @@ import os
 import shutil
 import re
 from concurrent.futures import ThreadPoolExecutor
+'''
+对于每一份txt文件，
+删除文件中的空白字符，再
+删除文件中的非中英文字符部分
+如果文件内容小于60%或者文件大小小于10000字节
+就移动到另一个文件夹中
+'''
 
 
 def clean_text(text):
