@@ -51,7 +51,7 @@ def get_copHtml_and_fileName(cop_info):
     File_Name = f"{ciks[3:]}_{period_ending}_{short_name}_{full_name}_{file_form}_{file_date}"
     File_Name = re.sub(r'[\\\/:\*?"<>|]', '', File_Name)
     # 拼成文件信息
-    File_Info = f"{ciks[3:]}_{period_ending[:4]}"
+    File_Info = f"{ciks[3:]}_{period_ending}"
 
     return Cop_Html, File_Name, File_Info
 

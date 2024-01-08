@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 from config import *
+import datetime
 
 
 def get_json(page):
@@ -44,23 +45,51 @@ def get_json(page):
     return True
 
 
+def create_date_intervals(interval, start_date="2000-01-01", end_date=None):
+    # 将字符串日期转换为datetime对象
+    start = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+    # 如果没有提供结束日期，则默认为今天
+    if end_date is None:
+        end = datetime.datetime.today()
+    else:
+        end = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+    # 初始化日期列表
+    intervals = []
+    # 当前开始日期
+    current_start = start
+    while current_start < end:
+        # 计算当前结束日期
+        current_end = current_start + datetime.timedelta(days=interval)
+        # 如果当前结束日期超过了总结束日期，就将其设置为总结束日期
+        if current_end > end:
+            current_end = end
+        # 将当前日期区间添加到列表
+        intervals.append(
+            f"{current_start.strftime('%Y-%m-%d')}~{current_end.strftime('%Y-%m-%d')}")
+        # 更新下一个区间的开始日期
+        current_start = current_end + datetime.timedelta(days=1)
+    return intervals
+
+
 开启补充下载 = 1
 ROOT = "N:\Source_for_sale\美股年报"
 FILE_DOWNLOADS = f'{ROOT}\downloaded_files.txt'
-FILE_PATH = f"{ROOT}\报告文件"
+FILE_PATH = f"{ROOT}"
+DATE_RANGE = create_date_intervals(10, "2024-01-01")
 
 if __name__ == '__main__':
-    for year in range(2024, 2001, -1):
+
+    for i, dateRages in enumerate(DATE_RANGE):
         page = 0
         if 'max_page' in globals():
             del globals()['max_page']
 
-        DATA['startdt'] = f'{year}-01-01'
-        DATA['enddt'] = f'{year}-12-31'
+        DATA['startdt'] = dateRages.split("~")[0]
+        DATA['enddt'] = dateRages.split("~")[1]
         while page < 100:
             page += 1
             if get_json(page) == False:
                 break
         time.sleep(5)
-        logging.info("==" * 20 + f"{year} 已完成" + "==" * 20)
+        logging.info(f"第 {dateRages} 区间完成, {i}/{len(DATE_RANGE)}")
     logging.info("全部完成！！")
