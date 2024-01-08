@@ -152,21 +152,11 @@ STOP_WORDS_DICT = {
 }
 
 
-SEARCH_KEY_LIST = {
-    "招股书": ['招股说明书', '招股意向书'],
-    "年报": ['年度报告', '年报'],
-    "社会责任": ['社会和', '社会及', '社会、', 'ESG', '社会、', '社会、',
-             '社会与', '社会责任', '社会企业责任', '社会暨', '社会治理',
-             '环境报告书', '环境责任', '环境及治理', '环境管理', '环境报告书',
-             '可持续发展']
-}
-
-
 开启包含关键词 = 0
-file_type = "年报"
-root_file_path = "E:\[待整理]Source_for_sale"
+file_type = "A股业绩预告"
+root_file_path = "E:\[待整理]Source_for_sale\补充下载"
 
 
 SAVING_PATH = f'{root_file_path}\{file_type}'
 LOCK_FILE_PATH = f'{root_file_path}\{file_type}\downloaded_files.txt'
-STOP_WORDS = STOP_WORDS_DICT["normal_sw"]
+STOP_WORDS = STOP_WORDS_DICT["yugao_sw"]

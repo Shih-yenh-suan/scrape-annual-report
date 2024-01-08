@@ -31,12 +31,21 @@ DATA_PARAMS = {
 }
 
 
+SEARCH_KEY_LIST = {
+    "招股书": ['招股说明书', '招股意向书'],
+    "年报": ['年度报告', '年报'],
+    "社会责任": ['社会和', '社会及', '社会、', 'ESG', '社会、', '社会、',
+             '社会与', '社会责任', '社会企业责任', '社会暨', '社会治理',
+             '环境报告书', '环境责任', '环境及治理', '环境管理', '环境报告书',
+             '可持续发展']
+}
+
 interval = 31  # 起始日期和结束日期之间的间隔。
 start_date = '2000-01-01'  # 起始日期。默认为2000-01-01
 end_date = None  # 默认为今天
 
 DATA['column'] = "szse"
-DATA['category'] = 'category_ndbg_szsh'
+DATA['category'] = 'category_yjygjxz_szsh'
 
 if 开启包含关键词 == 1:
     DATA['searchkey'] = ";".join(SEARCH_KEY_LIST["年报"])
