@@ -17,7 +17,7 @@ def format_date(date_str):
 def extract_date_from_content(content):
     """ 提取内容中的日期并格式化 """
     match = re.search(
-        r'annualreportpursuanttosection.*?for.{0,20}end(?:ed|ing)(\w*\d+,?\d{4})', content, re.IGNORECASE)
+        r'annualreport.{0,15}section.*?for.{0,20}end(?:ed|ing)(\w*\d+,?\d{4})', content, re.IGNORECASE)
     if match:
         return match
     return None
@@ -108,6 +108,7 @@ if __name__ == "__main__":
                 except Exception as e:
                     print(f"Error processing file {file}: {e}")
                 else:
-                    print(f"Progress: {(i + 1)} / {total_files}")
+                    print(
+                        f"Progress: {(i+1)}/{total_files}, {(i+1)/total_files*100:.2f}%")
     else:
         print("输入错误")
